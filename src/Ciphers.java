@@ -370,7 +370,6 @@ public class Ciphers {
                     }
                 }
             }
-            System.out.println(temp);
             rotateFirstRow(rotors);
 
             for (int j = 0; j < rotors[0].length; j++) {
@@ -440,7 +439,6 @@ public class Ciphers {
                     }
                 }
             }
-            System.out.println();
 
             output += temp;
         }

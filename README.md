@@ -16,8 +16,9 @@ The keyword will repeat until it is the same length. For example, if the message
 key is LION, the logic will use LIONLI to encyrpt the message. 
 
 ## Enigma Machine
+To make the cipher easier, EnigmaInput should be used.
 The Enigma Code was the encryption used by the Germans in WWII to communicate with each other. 
-This encryption system is extremely complex and is very effective. After the message is inputted, 
+This encryption system is extremely complex and is very effective. First, the initial position is set using the three letter key. After the message is inputted, 
 each letter will go through a minimum of 7 shifts. There can be more if pairs of letters are inputted in the plugboard. 
 Let's say the message HI is inputted. First, 'H' will go to the plugboard. If 'H' points at 'A', 'A' be the letter 
 inputted into the rotors. Within each rotor, the alphabet is entirely scrambled. Therefor, 'A' will get scrambled three times
