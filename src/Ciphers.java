@@ -5,8 +5,8 @@ import java.util.Scanner;
 
 public class Ciphers {
     private static final String QUESTION = "Which cipher would you like to use?";
-    private static final String OPTIONS = "1 Caesar\n2 Substitution cipher\n3 Vigenere Cipher\n4 Enigma Code\nExit\n";
-
+    private static final String OPTIONS = "1 Caesar\n2 Monoalphabetic cipher\n3 Vigenere Cipher\n" +
+            "4 Enigma Code\n5 Hill Cipher\nExit\n";
     private static final String CAESARINPUT = "Please enter the text";
     private static final String CAESARSHIFT = "Please enter the number of shifts";
     private static final String NUMBERERROR = "Please enter a valid int";
@@ -25,13 +25,19 @@ public class Ciphers {
     private static final String ROTORTWO = "Please enter the second rotor";
     private static final String ROTORTHREE = "Please enter the third rotor";
     private static final String ENIGMAREFLECTOR = "Please enter the reflector board pairs";
-    private static final String PLUGBOARD = "Please enter the plug-board (leave spaces empty if switches aren't desired)";
+    private static final String PLUGBOARD = "Please enter the plug-board " +
+            "(leave spaces empty if switches aren't desired)";
     private static final String ENIGMAKEY = "Please enter your key (three letters)";
     private static final String ENIGMAINPUT = "Please enter your message";
     private static final String ENIGMAERROR = "Rotors do not have 26 letters";
     private static final String PLUGBOARDPROBLEM = "Plug board has a problem";
     private static int enigmaFirstCount = 0;
     private static int enigmaSecondCount = 0;
+
+    private static final String MATRIXMESSAGE = "What is your message";
+    private static final String MATRIXKEY = "Please enter your encryption key (integers separated" +
+            " by commas, no spaces or special characters)";
+    private static final String MATRIXERROR = "You're key does not work or your key is not a 2x2, 3x3, ect.";
 
     public static void main(String[] args) {
         try (BufferedReader r = new BufferedReader(new FileReader("EnigmaInput"))) {
@@ -122,13 +128,32 @@ public class Ciphers {
                             System.out.println(ENIGMAINPUT);
                             String message = r.readLine();
 
-                            String output = enigma(rotorOne, rotorTwo, rotorThree, reflector, plugBoard, enigmaKey, message);
+                            String output = enigma(rotorOne, rotorTwo, rotorThree,
+                                    reflector, plugBoard, enigmaKey, message);
                             System.out.println(output);
 
                             System.out.println(CONTINUE);
                             enigmaBoolean = r.readLine().equalsIgnoreCase("yes");
                         } while (enigmaBoolean);
                         break;
+                    case "5":
+                        System.out.println(MATRIXKEY);
+                        String matrixKey = scan.nextLine();
+
+                        boolean matrixBoolean = false;
+
+                        do {
+                            System.out.println(MATRIXMESSAGE);
+                            String message = scan.nextLine();
+
+                            String output = matrix(message, matrixKey);
+                            System.out.println(output);
+
+                            System.out.println(CONTINUE);
+                            matrixBoolean = scan.nextLine().equalsIgnoreCase("yes");
+                        } while (matrixBoolean);
+                        break;
+
                     case "Exit":
                         return;
                     default:
@@ -272,7 +297,8 @@ public class Ciphers {
         return output;
     }
 
-    public static String enigma(String rotorOne, String rotorTwo, String rotorThree, String reflector, String plugBoard, String enigmaKey, String message) {
+    public static String enigma(String rotorOne, String rotorTwo, String rotorThree,
+                                String reflector, String plugBoard, String enigmaKey, String message) {
         String output = "";
         char temp = ' ';
         if (rotorOne.length() != 26 || rotorTwo.length() != 26 || rotorThree.length() != 26) {
@@ -466,5 +492,59 @@ public class Ciphers {
             }
         }
         return true;
+    }
+
+    public static String matrix(String message, String key) {
+        int matrixSize = 0;
+        String[] keyTemp = key.toLowerCase().split(",");
+        for (int i = 1; i <= keyTemp.length / 2; i++) {
+            if (keyTemp.length == i * i) {
+                matrixSize = i;
+            }
+        }
+
+        if (matrixSize == 0) {
+            return MATRIXERROR;
+        }
+
+        int[][] keyMatrix = new int[matrixSize][matrixSize];
+        int[][] finalMatrix = new int[matrixSize][1];
+        int[][] messageMatrix = new int[matrixSize][1];
+        String output = "";
+
+        //fill key matrix
+        int keyCount = 0;
+        for (int i = 0; i < matrixSize; i++) {
+            for (int j = 0; j < matrixSize; j++) {
+                keyMatrix[i][j] = Integer.parseInt(keyTemp[keyCount++]);
+            }
+        }
+
+        if (message.length() % matrixSize != 0) {
+            message += 'x';
+        }
+
+        int messageCount = 0;
+        for (int i = 0; i < (message.length() / matrixSize); i++) {
+
+            for (int k = 0; k < matrixSize; k++) {
+                messageMatrix[k][0] = message.toLowerCase().charAt(messageCount++) - 'a';
+            }
+
+            for (int j = 0; j < matrixSize; j++) {
+                finalMatrix[j][0] = 0;
+                for (int k = 0; k < matrixSize; k++) {
+                    finalMatrix[j][0] += keyMatrix[j][k] * messageMatrix[k][0];
+                }
+                finalMatrix[j][0] %= 26;
+            }
+
+            for (int[] c : finalMatrix) {
+                for (int v : c) {
+                    output += (char) (v + 'a');
+                }
+            }
+        }
+        return output;
     }
 }
