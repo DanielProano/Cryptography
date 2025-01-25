@@ -298,7 +298,7 @@ public class Ciphers {
     }
 
     public static String enigma(String rotorOne, String rotorTwo, String rotorThree,
-                                String reflector, String plugBoard, String enigmaKey, String message) {
+                                String reflector, String plugBoard, String startingPosition, String message) {
         String output = "";
         char temp = ' ';
         if (rotorOne.length() != 26 || rotorTwo.length() != 26 || rotorThree.length() != 26) {
@@ -331,19 +331,18 @@ public class Ciphers {
         }
 
         for (int i = 0; i < 3; i++) {
-            char current = enigmaKey.toLowerCase().charAt(i);
-            int shift = (current - 97);
+            char setToStartingPos = startingPosition.toLowerCase().charAt(i);
 
             if (i == 0) {
-                for (int j = 0; j < shift; j++) {
+                while (setToStartingPos != rotors[1][i]) {
                     rotateFirstRow(rotors);
                 }
             } else if (i == 1) {
-                for (int j = 0; j < shift; j++) {
+                while (setToStartingPos != rotors[1][i]) {
                     rotateSecondRow(rotors);
                 }
-            } else if (i == 2) {
-                for (int j = 0; j < shift; j++) {
+            } else {
+                while (setToStartingPos != rotors[1][i]) {
                     rotateThirdRow(rotors);
                 }
             }
