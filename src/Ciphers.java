@@ -338,11 +338,11 @@ public class Ciphers {
                     rotateFirstRow(rotors);
                 }
             } else if (i == 1) {
-                while (setToStartingPos != rotors[1][i]) {
+                while (setToStartingPos != rotors[2][i]) {
                     rotateSecondRow(rotors);
                 }
             } else {
-                while (setToStartingPos != rotors[1][i]) {
+                while (setToStartingPos != rotors[3][i]) {
                     rotateThirdRow(rotors);
                 }
             }
